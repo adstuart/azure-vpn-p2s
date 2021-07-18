@@ -44,7 +44,8 @@ The popularity of the term Always-On VPN (AOVPN) can cause confusion when approa
 More detail:  https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-auto-trigger-profile
 
 _Important!_
-The following tick-box =/= Always-On. Instead, this effectively tells the VPN platform to connect automatically **only** if one of the above triggers = YES. E
+The following tick-box =/= Always-On. Instead, this effectively tells the VPN platform to connect automatically **only** if one of the above triggers = YES.
+
 ![auto_connect](/images/connect_auto.ong)
 
 # Lab Setup
@@ -57,11 +58,10 @@ Prerequisites
 See more:
 
 https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-profile-intune
+
 https://docs.microsoft.com/en-us/azure/virtual-wan/vpn-profile-intune
 
-
 Configuration
-
 -	Authentication: Certificate
 -	Azure head-end: Azure VWAN P2S
 -	Protocol: OpenVPN
@@ -75,11 +75,11 @@ Configuration
 ## Configuration
 Inside of your XML, specify the following configuration parameters:
    
-   <AppTrigger>  
+   '<AppTrigger>  
     <App>  
       <Id>C:\windows\system32\notepad.exe</Id>  
     </App>  
-  </AppTrigger>  
+  </AppTrigger>'
    
 ## User Experience
 
