@@ -50,7 +50,8 @@ The following tick-box =/= Always-On. Instead, this effectively tells the VPN pl
 
 # Lab Setup
 
-Prerequisites
+### Prerequisites
+
 - Client is AAD joined, and enrolled in Intune
 - Client machine has required client certificates installed
 - Azure VPN Client is installed on Windows 10 (either manually, or via Intune)
@@ -61,7 +62,8 @@ https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-profile-intune
 
 https://docs.microsoft.com/en-us/azure/virtual-wan/vpn-profile-intune
 
-Configuration
+### Configuration
+
 -	Authentication: Certificate
 -	Azure head-end: Azure VWAN P2S
 -	Protocol: OpenVPN
