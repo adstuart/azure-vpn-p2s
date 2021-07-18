@@ -16,7 +16,6 @@
 
 Caveat empor. The solution explored in this article is narrowly focused on allowing a VPN to trigger based on specific conditions. There are other technical approaches to solving these customer scenarios, that fall outside the scope of this document. Examples include exposing the required application directly to the Internet and using a Modern Authentication method, or utilising Azure AD Application Proxy to publish the application via the Internet, thereby potentially removing the requirement for a Client VPN at all.
 
-
 ## Win 10 VPN 
 
 A (very) quick summary of the Windows 10 VPN platform:
@@ -25,9 +24,9 @@ A (very) quick summary of the Windows 10 VPN platform:
 - Supports universal VPN plugins, often used to enhance the base feature set E.g. to support SSL based VPNs
   - Azure VPN Client is just one example of a plugin, many other vendors such as Palo Alto exist in this space
    - These plugins require installation beyond what is supplied in the base Win10 O/S
--	Configuration via the VPNv2 configuration service provider (CSP) standardised interface https://docs.microsoft.com/en-us/windows/client-management/mdm/vpnv2-csp
-  - This CSP can be configured locally via PowerShell, or remotely via an MDM (E.g., Intune)
-  - Support for ProfileXML files that contain a list of profile settings, in a defined structure that aligns with the parameters set out in the VPNv2 schema
+- Configuration via the VPNv2 configuration service provider (CSP) standardised interface https://docs.microsoft.com/en-us/windows/client-management/mdm/vpnv2-csp
+  -  This CSP can be configured locally via PowerShell, or remotely via an MDM (E.g., Intune)
+  -  Support for ProfileXML files that contain a list of profile settings, in a defined structure that aligns with the parameters set out in the VPNv2 schema
 
 
 - Item 1
