@@ -21,10 +21,10 @@ Caveat empor. The solution explored in this article is narrowly focused on allow
 
 A (very) quick summary of the Windows 10 VPN platform:
 
--	Built-in VPN Client software. Pre-packaged out of the box, supports IKEv2 and SSTP protocols
--	Supports universal VPN plugins, often used to enhance the base feature set E.g. to support SSL based VPNs
+- Built-in VPN Client software. Pre-packaged out of the box, supports IKEv2 and SSTP protocols
+- Supports universal VPN plugins, often used to enhance the base feature set E.g. to support SSL based VPNs
   - Azure VPN Client is just one example of a plugin, many other vendors such as Palo Alto exist in this space
-  - These plugins require installation beyond what is supplied in the base Win10 O/S
+   - These plugins require installation beyond what is supplied in the base Win10 O/S
 -	Configuration via the VPNv2 configuration service provider (CSP) standardised interface https://docs.microsoft.com/en-us/windows/client-management/mdm/vpnv2-csp
   - This CSP can be configured locally via PowerShell, or remotely via an MDM (E.g., Intune)
   - Support for ProfileXML files that contain a list of profile settings, in a defined structure that aligns with the parameters set out in the VPNv2 schema
