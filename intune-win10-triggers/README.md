@@ -128,7 +128,7 @@ Inside of your XML, specify the following configuration parameters:
 </DomainNameInformation>
 ```
   
-Verify NAme-Trigger settings have been pushed to client, by launching PowerShell and running `Get-VpnConnectionTrigger`
+Verify Name-Trigger settings have been pushed to client, by launching PowerShell and running `Get-VpnConnectionTrigger`
 
 ```
 PS C:\Users\AdamStuart> get-vpnconnectiontrigger
