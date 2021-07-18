@@ -217,4 +217,9 @@ You achieve the above at scale by using multiple Intune Device Configuration pro
 
 # Closing
 
-Thanks to @Antonio @Jack @Claire @Jason for supporting the above testing.
+Thanks to my fellow Microsoft colleagues for supporting this testing.
+  
+- Antonio Traetto
+- Jack Tracey
+- Claire Brydon
+- Jason Jones 
