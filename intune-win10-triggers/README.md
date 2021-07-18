@@ -177,6 +177,8 @@ _Unfortunately the VPNv2 schema does not appear to include the IdleTimeoutSecond
   
 _The easiest way to review historical VPN connect/disconnects is via Event Viewer as per below:_
   
+![auto_connect](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/event.png)
+  
 <image>
 
 
@@ -211,7 +213,7 @@ After tuning: Variable P2S Connection Units cost only5
 
 You achieve the above at scale by using multiple Intune Device Configuration profiles, assigned to different groups of users. For example, in the screenshot below, you can see I have 4 3 different VPN profiles that all use the same Azure VWAN service in the Cloud, however they contain different triggering options to reflect the different user requirements.
 
-<image>
+![auto_connect](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/intune.png)
 
 # Closing
 
