@@ -28,27 +28,25 @@ A (very) quick summary of the Windows 10 VPN platform:
   -  This CSP can be configured locally via PowerShell, or remotely via an MDM (E.g., Intune)
   -  Support for ProfileXML files that contain a list of profile settings, in a defined structure that aligns with the parameters set out in the VPNv2 schema
 
-
-- Item 1
-- Item 2
-  - Sub Item 1
-  - Sub Item 2
-
 More technical detail here https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-guide
 
 Using the above structure, it is therefore possible to leverage the native VPNv2 schema for general parameter definition (E.g. When should this VPN connect? what server should I connect to? what is my P2S DNS configuration?), whilst at the same time leverage the Universal Plugin for authentication types and transport mechanisms not provided by the native O/S. Azure VPN Client is an example of this, providing supports for the OpenVPN transport protocol, and Azure AD authentication, both of which are not provided by Windows10 Client VPN capability out of the box. This article builds upon this functionality to define general trigger settings that affect the Azure VPN Client behaviour.
 
 # VPN Trigger options
+
 The popularity of the term Always-On VPN (AOVPN) can cause confusion when approaching VPN designs on Windows 10. Whilst its true the Always-On experience is the most common configuration; it is possible to configure the client to activate in several ways.
--	Trigger option 1. Always-On. To achieve this, simply add <AlwaysOn>true</AlwaysOn> to your XML file. The VPN will connect after the user logs in and remain connected.
--	Trigger option 2. Manual, user driven. Set <AlwaysOn>false</AlwaysOn> in your XML file. The VPN only connects when a user hits “connect”, and only disconnects when they choose “disconnect”
--	Trigger option 3. App-based trigger, the VPN connects after a specified application is launched and disconnects ~5 minutes after the application is closed.
--	Trigger option 4. Name-based trigger, the VPN connects after the O/S processes a DNS lookup for a specified domain. See section below for disconnect behaviour related to this trigger type.
+
+- Trigger option 1. **Always-O**n. To achieve this, simply add <AlwaysOn>true</AlwaysOn> to your XML file. The VPN will connect after the user logs in and remain connected.
+- Trigger option 2. **Manual**, user driven. Set <AlwaysOn>false</AlwaysOn> in your XML file. The VPN only connects when a user hits “connect”, and only disconnects when they choose “disconnect”
+- Trigger option 3. **App-based trigger**, the VPN connects after a specified application is launched and disconnects ~5 minutes after the application is closed.
+- Trigger option 4. **Name-based trigger**, the VPN connects after the O/S processes a DNS lookup for a specified domain. See section below for disconnect behaviour related to this trigger type.
+
 More detail:  https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-auto-trigger-profile
 
-Important!
+_Important!_
 The following tick-box =/= Always-On. Instead, this effectively tells the VPN platform to connect automatically **only** if one of the above triggers = YES. E
-<image auto connect>
+![auto_connect](/images/connect_auto.ong)
+
 # Lab Setup
 
 Prerequisites
