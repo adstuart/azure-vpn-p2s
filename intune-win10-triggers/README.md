@@ -46,7 +46,7 @@ More detail:  https://docs.microsoft.com/en-us/windows/security/identity-protect
 _Important!_
 The following tick-box =/= Always-On. Instead, this effectively tells the VPN platform to connect automatically **only** if one of the above triggers = YES.
 
-![auto_connect](/images/connect_auto.png)
+![auto_connect](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/connect_auto.png)
 
 # Lab Setup
 
