@@ -97,7 +97,9 @@ ConnectionName: Global-WAN
 ConnectionName         : Global-WAN
 ApplicationID          : { C:\windows\system32\notepad.exe }
 ```
-### :point_right: Note.  App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
+### :point_right: Note
+
+App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
 
 VPN does not connect automatically
 
