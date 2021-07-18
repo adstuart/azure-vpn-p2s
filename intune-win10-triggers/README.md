@@ -30,10 +30,10 @@ A (very) quick summary of the Windows 10 VPN platform:
   - Support for ProfileXML files that contain a list of profile settings, in a defined structure that aligns with the parameters set out in the VPNv2 schema
 
 
-- Bullet list
-              - Nested bullet
-                  - Sub-nested bullet etc
-          - Bullet list item 2 
+- Item 1
+- Item 2
+  - Sub Item 1
+  - Sub Item 2
 
 More technical detail here https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-guide
 
