@@ -75,16 +75,19 @@ Configuration
 ## Configuration
 Inside of your XML, specify the following configuration parameters:
    
-   '<AppTrigger>  
+'''
+<AppTrigger>  
     <App>  
       <Id>C:\windows\system32\notepad.exe</Id>  
     </App>  
-  </AppTrigger>'
-   
+</AppTrigger>'
+'''
+
 ## User Experience
 
-Verify App-Trigger settings have been pushed to client, by launching PowerShell and running Get-VpnConnectionTrigger E.g.:
+Verify App-Trigger settings have been pushed to client, by launching PowerShell and running 'Get-VpnConnectionTrigger'
 
+'''
 PS C:\Users\AdamStuart> Get-VpnConnectionTrigger
 
 cmdlet Get-VpnConnectionTrigger at command pipeline position 1
@@ -93,37 +96,40 @@ ConnectionName: Global-WAN
 
 ConnectionName         : Global-WAN
 ApplicationID          : { C:\windows\system32\notepad.exe }
+'''
 
 Note, App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
 
 VPN does not connect automatically
+
 <image>
 
 VPN connects when application is launched
+  
 <image>
 
 VPN disconnects after 5 minutes of closing the app
+  
 <image>
-
-
-
-
 
 # Name-based autotrigger 
 
 ## Configuration
 Inside of your XML, specify the following configuration parameters:
    
+'''
 <DomainNameInformation>  
     <DomainName>hrapp.contoso.com</DomainName>  
     <DnsServers>8.8.8.8</DnsServers>  
     <AutoTrigger>true</AutoTrigger>  
-  </DomainNameInformation> 
+</DomainNameInformation>
+'''
    
 ## User Experience
 
-Verify NAme-Trigger settings have been pushed to client, by launching PowerShell and running Get-VpnConnectionTrigger E.g.:
+Verify NAme-Trigger settings have been pushed to client, by launching PowerShell and running 'Get-VpnConnectionTrigger'
 
+'''
 PS C:\Users\AdamStuart> get-vpnconnectiontrigger
 
 cmdlet Get-VpnConnectionTrigger at command pipeline position 1
@@ -136,50 +142,58 @@ TrustedNetwork         : {corp.contoso.com}
 Dns Suffix                                                  Dns Servers
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _           _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 hrapp.contoso.com                                           {8.8.8.8}
-
+'''
+  
 Note, App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
 
 VPN does not connect automatically
+  
 <image>
 
 VPN connects when DNS lookup is performed is running
+  
 <image>
 
-The VPN disconnect experience for name-trigger is different to that of app-trigger. This is presumably because the O/S has a clear way to acknowledge when an application is closed but applying the same approach to DNS lookups only would result in an unusable intermittent connection. Therefore, by default, with name-trigger. The VPN will trigger, and then remain connected until the user logs off.
+Note. The VPN disconnect experience for name-trigger is different to that of app-trigger. This is presumably because the O/S has a clear way to acknowledge when an application is closed but applying the same approach to DNS lookups only would result in an unusable intermittent connection. Therefore, by default, with name-trigger. The VPN will trigger, and then remain connected until the user logs off.
 
-It is possible to change this behaviour of Win10 VPN, by modifying a setting called IdleDisconnectSettings E.g.
+It is possible to change this behaviour of Win10 VPN, by modifying a setting called 'IdleDisconnectSettings' E.g.
 
-PS C:\Users\AdamStuart> Set-VpnConnection -Name GlobalWAN -IdleDisconnectSeconds 10 -thirdpartyvpn
+'PS C:\Users\AdamStuart> Set-VpnConnection -Name GlobalWAN -IdleDisconnectSeconds 10 -thirdpartyvpn'
 
-This will then allow the VPN Connection to timeout if an active trigger is not detected. In my testing with name-trigger, it took between 5-15mins to disconnect, but I am unaware of the underlying variables in play.
-If you run “Get-VPNconnection”, you will notice that the default IdleTimeoutSeconds value = 0, I.e., Idle timeout is disabled.
+This will then allow the VPN Connection to timeout if an active trigger is not detected. In my testing with name-trigger, it took between 5-15mins to disconnect, but I am unaware of the underlying variables in play. If you run 'Get-VPNconnection', you will notice that the default IdleTimeoutSeconds value = 0, I.e., Idle timeout is disabled.
 
-NB. Unfortunately the VPNv2 schema does not appear to include the IdleTimeoutSeconds variable, therefore you cannot use the Profile XML definition approach. In my testing I used local PowerShell as per above, however if working at scale, you could package the script via Intune.
-https://docs.microsoft.com/en-us/mem/intune/apps/intune-management-extension
+Note. Unfortunately the VPNv2 schema does not appear to include the IdleTimeoutSeconds variable, therefore you cannot use the Profile XML definition approach. In my testing I used local PowerShell as per above, however if working at scale, you can package the script via Intune. https://docs.microsoft.com/en-us/mem/intune/apps/intune-management-extension
 
-The easiest way to review historical VPN connect/disconnects is via Event Viewer as per below:
+Note. The easiest way to review historical VPN connect/disconnects is via Event Viewer as per below:
+  
 <image>
 
 
 # Important!
+  
 I was initially testing using Windows 10 clients hosted on Azure Virtual Machines, however app/name triggering does not seem to function in this scenario. (Always-On triggering works fine). I therefore switched to using a local Windows 10 client. One to watch out for if you are proving this out in a virtual lab before production.
 
 
 
 # Example pricing impact
+  
 Virtual WAN pricing: https://azure.microsoft.com/en-gb/pricing/details/virtual-wan/
+  
 VPN Gateway pricing: https://azure.microsoft.com/en-gb/pricing/details/vpn-gateway/
 
 Example based on Virtual WAN, the subject of this article:
--	
+
 -	Contoso has 1000 users
 -	500 require “Always-On” VPN, as they work throughout the day using systems that require  an active Private network connection to applications hosted in Azure. 
 -	500 primarily work “over the Internet” using SaaS services such as M365, spending most of their working day using Office apps such as Outlook and SharePoint.
-o	These users only require the VPN connection on Friday afternoons when performing a specific task, that requires an application that users a private network connection to Azure
+  - These users only require the VPN connection on Friday afternoons when performing a specific task, that requires an application that users a private network connection to Azure
+  
 Before tuning: Variable P2S Connection Units cost only
+  
 -	1000 users * 40 hours per week * 48 working weeks per year * $0.013 per hour charge = $24960 p/a
 
 After tuning: Variable P2S Connection Units cost only5
+  
 -	500 users * 40 hours per week * 48 working weeks per year * $0.013 per hour charge = $12480 p/a
 -	500 users  * 4 hours VPN required per week * 48 working weeks per year * $0.013 per hour charge = $1248p/a
 -	Total cost $13728 p/a (=$11232 saving p/a)
