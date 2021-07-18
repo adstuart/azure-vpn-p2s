@@ -23,11 +23,12 @@ A (very) quick summary of the Windows 10 VPN platform:
 
 -	Built-in VPN Client software. Pre-packaged out of the box, supports IKEv2 and SSTP protocols
 -	Supports universal VPN plugins, often used to enhance the base feature set E.g. to support SSL based VPNs
-o	Azure VPN Client is just one example of a plugin, many other vendors such as Palo Alto exist in this space
-o	These plugins require installation beyond what is supplied in the base Win10 O/S
+  - Azure VPN Client is just one example of a plugin, many other vendors such as Palo Alto exist in this space
+  - These plugins require installation beyond what is supplied in the base Win10 O/S
 -	Configuration via the VPNv2 configuration service provider (CSP) standardised interface https://docs.microsoft.com/en-us/windows/client-management/mdm/vpnv2-csp
-o	This CSP can be configured locally via PowerShell, or remotely via an MDM (E.g., Intune)
-o	Support for ProfileXML files that contain a list of profile settings, in a defined structure that aligns with the parameters set out in the VPNv2 schema
+  - This CSP can be configured locally via PowerShell, or remotely via an MDM (E.g., Intune)
+  - Support for ProfileXML files that contain a list of profile settings, in a defined structure that aligns with the parameters set out in the VPNv2 schema
+
 More technical detail here https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-guide
 Using the above structure, it is therefore possible to leverage the native VPNv2 schema for general parameter definition (E.g. When should this VPN connect? what server should I connect to? what is my P2S DNS configuration?), whilst at the same time leverage the Universal Plugin for authentication types and transport mechanisms not provided by the native O/S. Azure VPN Client is an example of this, providing supports for the OpenVPN transport protocol, and Azure AD authentication, both of which are not provided by Windows10 Client VPN capability out of the box. This article builds upon this functionality to define general trigger settings that affect the Azure VPN Client behaviour.
 
