@@ -85,8 +85,6 @@ Inside of your XML, specify the following configuration parameters:
 </AppTrigger>
 ```
 
-## User Experience
-
 Verify App-Trigger settings have been pushed to client, by launching PowerShell and running `Get-VpnConnectionTrigger`
 
 ```
@@ -102,6 +100,8 @@ ApplicationID          : { C:\windows\system32\notepad.exe }
 ### :point_right: Note
 
 _App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter._
+
+## User Experience
 
 VPN does not connect automatically
 
@@ -127,9 +127,7 @@ Inside of your XML, specify the following configuration parameters:
     <AutoTrigger>true</AutoTrigger>  
 </DomainNameInformation>
 ```
-   
-## User Experience
-
+  
 Verify NAme-Trigger settings have been pushed to client, by launching PowerShell and running `Get-VpnConnectionTrigger`
 
 ```
@@ -150,6 +148,8 @@ hrapp.contoso.com                                           {8.8.8.8}
 ### :point_right: Note
 
 _App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter._
+  
+## User Experience
 
 VPN does not connect automatically
   
