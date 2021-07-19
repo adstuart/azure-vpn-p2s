@@ -105,15 +105,13 @@ _App-trigger, and name-trigger do not activate if you are leveraging Trusted Net
 
 VPN does not connect automatically
 
-<image>
+![image](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/a.PNG)
 
 VPN connects when application is launched
   
-<image>
+![image](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/c.PNG)
 
-VPN disconnects after 5 minutes of closing the app
-  
-<image>
+VPN disconnects after ~5 minutes of closing the app
 
 # Name-based autotrigger 
 
@@ -153,11 +151,11 @@ _App-trigger, and name-trigger do not activate if you are leveraging Trusted Net
 
 VPN does not connect automatically
   
-<image>
+![image](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/a.PNG)
 
 VPN connects when DNS lookup is performed is running
   
-<image>
+![image](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/b.PNG)
 
 ### :point_right: Note
   
