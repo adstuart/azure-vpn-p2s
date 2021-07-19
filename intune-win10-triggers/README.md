@@ -49,8 +49,9 @@ The popularity of the term Always-On VPN (AOVPN) can cause confusion when approa
 
 More detail:  https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-auto-trigger-profile
 
-_Important!_
-The following tick-box =/= Always-On. Instead, this effectively tells the VPN platform to connect automatically **only** if one of the above triggers = YES.
+### :point_right: Note
+
+> The following tick-box =/= Always-On. Instead, this effectively tells the VPN platform to connect automatically **only** if one of the above triggers = YES.
 
 ![auto_connect](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/connect_auto.png)
 
@@ -105,7 +106,7 @@ ApplicationID          : { C:\windows\system32\notepad.exe }
 ```
 ### :point_right: Note
 
->_App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
+> App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
 
 ## User Experience
 
