@@ -203,7 +203,7 @@ Before tuning: Variable P2S Connection Units cost only
   
 -	1000 users * 40 hours per week * 48 working weeks per year * $0.013 per hour charge = $24960 p/a
 
-After tuning: Variable P2S Connection Units cost only5
+After tuning: Variable P2S Connection Units cost only
   
 -	500 users * 40 hours per week * 48 working weeks per year * $0.013 per hour charge = $12480 p/a
 -	500 users  * 4 hours VPN required per week * 48 working weeks per year * $0.013 per hour charge = $1248p/a
