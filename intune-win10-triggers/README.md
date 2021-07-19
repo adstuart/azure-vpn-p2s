@@ -12,6 +12,12 @@
 - Some of their staff only leverage the VPN for infrequent use of a single application
 - They would like to explore if it’s possible to change the VPN connection behaviour to optimise cost (Azure P2S termination solutions, VPN Gateway and Azure VWAN, incur P2S connection charges on a per connection, per hour basis I.e., the amount of time a client is connected, has direct impact on the overall solution cost).
 
+![auto_connect](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/solution.PNG)
+
+# Important!
+  
+This was intiially tested using Windows 10 clients hosted on Azure Virtual Machines, however app/name triggering does not seem to function in this scenario. (Always-On triggering works fine). I therefore suggest using a local Windows 10 client. One to watch out for if you are proving this out in a virtual lab before production.
+
 ## Big Picture
 
 Caveat empor. The solution explored in this article is narrowly focused on allowing a VPN to trigger based on specific conditions. There are other technical approaches to solving these customer scenarios, that fall outside the scope of this document. Examples include exposing the required application directly to the Internet and using a Modern Authentication method, or utilising Azure AD Application Proxy to publish the application via the Internet, thereby potentially removing the requirement for a Client VPN at all.
@@ -159,7 +165,7 @@ VPN connects when DNS lookup is performed is running
 
 ### :point_right: Note
   
-_The VPN disconnect experience for name-trigger is different to that of app-trigger. This is presumably because the O/S has a clear way to acknowledge when an application is closed but applying the same approach to DNS lookups only would result in an unusable intermittent connection. Therefore, by default, with name-trigger. The VPN will trigger, and then remain connected until the user logs off._
+> _The VPN disconnect experience for name-trigger is different to that of app-trigger. This is presumably because the O/S has a clear way to acknowledge when an application is closed but applying the same approach to DNS lookups only would result in an unusable intermittent connection. Therefore, by default, with name-trigger. The VPN will trigger, and then remain connected until the user logs off._
 
 It is possible to change this behaviour of Win10 VPN, by modifying a setting called `IdleDisconnectSettings` E.g.
 
@@ -177,15 +183,6 @@ _The easiest way to review historical VPN connect/disconnects is via Event Viewe
   
 ![event](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/event.PNG)
   
-<image>
-
-
-# Important!
-  
-I was initially testing using Windows 10 clients hosted on Azure Virtual Machines, however app/name triggering does not seem to function in this scenario. (Always-On triggering works fine). I therefore switched to using a local Windows 10 client. One to watch out for if you are proving this out in a virtual lab before production.
-
-
-
 # Example pricing impact
   
 Virtual WAN pricing: https://azure.microsoft.com/en-gb/pricing/details/virtual-wan/
