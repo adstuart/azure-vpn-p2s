@@ -105,7 +105,7 @@ ApplicationID          : { C:\windows\system32\notepad.exe }
 ```
 ### :point_right: Note
 
-_App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter._
+>_App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
 
 ## User Experience
 
@@ -151,7 +151,7 @@ hrapp.contoso.com                                           {8.8.8.8}
   
 ### :point_right: Note
 
-_App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter._
+> App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
   
 ## User Experience
 
@@ -165,7 +165,7 @@ VPN connects when DNS lookup is performed is running
 
 ### :point_right: Note
   
-> _The VPN disconnect experience for name-trigger is different to that of app-trigger. This is presumably because the O/S has a clear way to acknowledge when an application is closed but applying the same approach to DNS lookups only would result in an unusable intermittent connection. Therefore, by default, with name-trigger. The VPN will trigger, and then remain connected until the user logs off._
+> The VPN disconnect experience for name-trigger is different to that of app-trigger. This is presumably because the O/S has a clear way to acknowledge when an application is closed but applying the same approach to DNS lookups only would result in an unusable intermittent connection. Therefore, by default, with name-trigger. The VPN will trigger, and then remain connected until the user logs off.
 
 It is possible to change this behaviour of Win10 VPN, by modifying a setting called `IdleDisconnectSettings` E.g.
 
@@ -175,11 +175,11 @@ This will then allow the VPN Connection to timeout if an active trigger is not d
 
 ### :point_right: Note
   
-_Unfortunately the VPNv2 schema does not appear to include the IdleTimeoutSeconds variable, therefore you cannot use the Profile XML definition approach. In my testing I used local PowerShell as per above, however if working at scale, you can package the script via Intune. https://docs.microsoft.com/en-us/mem/intune/apps/intune-management-extension_
+> Unfortunately the VPNv2 schema does not appear to include the IdleTimeoutSeconds variable, therefore you cannot use the Profile XML definition approach. In my testing I used local PowerShell as per above, however if working at scale, you can package the script via Intune. https://docs.microsoft.com/en-us/mem/intune/apps/intune-management-extension
 
 ### :point_right: Note
   
-_The easiest way to review historical VPN connect/disconnects is via Event Viewer as per below:_
+> The easiest way to review historical VPN connect/disconnects is via Event Viewer as per below:
   
 ![event](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/event.PNG)
   
