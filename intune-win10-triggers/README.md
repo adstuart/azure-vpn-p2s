@@ -14,7 +14,7 @@
 
 ![auto_connect](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/solution.PNG)
 
-# Important!
+## Important!
   
 This was intiially tested using Windows 10 clients hosted on Azure Virtual Machines, however app/name triggering does not seem to function in this scenario. (Always-On triggering works fine). I therefore suggest using a local Windows 10 client. One to watch out for if you are proving this out in a virtual lab before production.
 
