@@ -196,7 +196,7 @@ Example based on Virtual WAN, the subject of this article:
 -	500 require “Always-On” VPN, as they work throughout the day using systems that require  an active Private network connection to applications hosted in Azure. 
 -	500 primarily work “over the Internet” using SaaS services such as M365, spending most of their working day using Office apps such as Outlook and SharePoint.
   - These users only require the VPN connection on Friday afternoons when performing a specific task, that requires an application that users a private network connection to Azure
-  
+
 Before tuning: Variable P2S Connection Units cost only
   
 -	1000 users * 40 hours per week * 48 working weeks per year * $0.013 per hour charge = $24960 p/a
@@ -207,7 +207,7 @@ After tuning: Variable P2S Connection Units cost only
 -	500 users  * 4 hours VPN required per week * 48 working weeks per year * $0.013 per hour charge = $1248p/a
 -	Total cost $13728 p/a (=$11232 saving p/a)
 
-You achieve the above at scale by using multiple Intune Device Configuration profiles, assigned to different groups of users. For example, in the screenshot below, you can see I have 4 3 different VPN profiles that all use the same Azure VWAN service in the Cloud, however they contain different triggering options to reflect the different user requirements.
+You achieve the above at scale by using multiple Intune Device Configuration profiles, assigned to different groups of users. For example, in the screenshot below, you can see I have three different VPN profiles that all use the same Azure VWAN service in the Cloud, however they contain different triggering options to reflect the different user requirements.
 
 ![intune](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/intune.PNG)
 
