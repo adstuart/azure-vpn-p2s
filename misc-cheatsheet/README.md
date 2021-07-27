@@ -26,8 +26,4 @@ Note how this includes connected duration, external PiP and internal allocated P
 
 https://powers-hell.com/2020/11/28/set-your-azure-vpn-connections-to-connect-automatically-with-powershell/
 
-## This is a test
-
-:sleeping: 
-
 
