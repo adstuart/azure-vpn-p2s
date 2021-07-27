@@ -4,7 +4,6 @@
 
 - [Azure VPN Client deployment via Intune](#azure-vpn-client-deployment-via-intune)
 - [Context](#context)
-        - [1. <a name='pointright:Note'></a>:pointright: Note](#1-a-namepointrightnoteapointright-note)
 - [Overview](#overview)
 - [Considerations](#considerations)
 - [Guide](#guide)
@@ -23,8 +22,6 @@
 <!-- /TOC -->
 
 #  Context
-
-###  1. <a name='point_right:Note'></a>:point_right: Note
 
 > Before continuing, be aware of future changes in respect to the Microsoft Store for business: https://techcommunity.microsoft.com/t5/windows-it-pro-blog/evolving-the-microsoft-store-for-business-and-education/ba-p/2569423
 
