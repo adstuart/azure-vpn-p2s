@@ -17,9 +17,11 @@ However, installation of the Azure VPN Client itself, is another thing that need
 
 # Overview
 
-This document is aimed at IT adminstrators who are managing the Intune estate and have been asked to provision the Azure VPN Client at scale to their clients, in order to support the wider Client P2S project.
+This document is aimed at IT administrators who are managing the Intune estate and have been asked to provision the Azure VPN Client at scale to their clients, in order to support the wider Client P2S project.
 
 This document provides a step-by-step guide showing how to achieve this without permitting open access to the public Microsoft Store. We start from the perspective of an Intune administrator who has never worked with the Microsoft Store for Business.
+
+Consider this a soup-to-nuts guide, if you are already experienced in the early steps, feel free to skip ahead. If you are new to everything Intune, then read on!
 
 # Considerations
 
@@ -27,7 +29,7 @@ The Azure VPN client is only available for installation via the Microsoft Store,
 
 # Step 1 - Enable the Microsoft Store for Business
 
-In order to push out the Azure VPN Client to your users, without requiring them to manually install via the public Microsoft store, we will use the Microsoft Store for Business. Enterprises very rarely want to permit their users open access to every application on the public store. Using the Store for Business we can provide a perscribed list of applications, approved by central IT, and also choose to push these to devices for automatic installation.
+In order to push out the Azure VPN Client to your users, without requiring them to manually install via the public Microsoft store, we will use the Microsoft Store for Business. Enterprises very rarely want to permit their users open access to every application on the public store. Using the Store for Business we can provide a prescribed list of applications, approved by central IT, and also choose to push these to devices for automatic installation.
 
 Microsoft Endpoint Manager (endpoint.microsoft.com) (aka MEM) > Tenant Administration > Microsoft Store for Business > Enable toggle > Save
 
@@ -85,6 +87,44 @@ Back to Microsoft Endpoint Manager (endpoint.microsoft.com) (aka MEM) > Tenant A
 
 This can take some time to complete (~hours).
 
+# Step 6 - Back to InTune to verify
+
+If everything above complete successfully then inside of MEM > Apps > Windows, you should now see your synced apps listed. Notice how they, are at this stage, unassigned.
+
+![](2021-07-27-22-27-15.png)
+
+# Step 7 - Assign app to user(s)
+
+MEM > Apps > Windows > Azure VPN Client (Online) > Properties
+
+Next to Assignments, choose Edit, allocate as per your organisations requirements. For testing you may choose to assign to "all devices", but most Enterprise customers are going to be using user based groups for allocation.
+
+![](2021-07-27-22-30-45.png)
+
+Within assignments, you also have the high level choice of assignment type. Probably most folks reading this guide will want to choose "required", I.e. When a device syncs to Intune, the Azure VPN Client will be automatically installed as per company policy. Choosing "Available to enrolled devices" would make it a user driven action, which was not the focus of this document.
+
+![](2021-07-27-22-32-25.png)
+
+# Step 8 - Verify Windows10 Client
+
+After 5-10mins, or after a forced device sync, we can verify the Azure VPN Client has been pushed to the user's device in two ways.
+
+Either client side, open the MS Store, notice how we now have a private Microsoft Store for Business tab, within which you should see the app, and its installation status reflected correctly.
+
+![](2021-07-27-22-34-57.png)
+
+We can also verify installation compliance from within Intune itself. This takes 15-30mins to update.
+
+MEM > Apps > Windows > Azure VPN Client > User Install Status > [username] 
+
+![](2021-07-27-22-37-08.png)
+
+# Step 9 - Verify VPN Connectivity
+
+With the Azure VPN Client plugin now installed, and assuming you have configured your authentication and completed the deployment of the VPN configuration profile (Again, see, https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-profile-intune/https://docs.microsoft.com/en-us/azure/virtual-wan/vpn-profile-intune) then your client should now have everything it needs to setup the P2S connection to Azure.
+
+![](2021-07-27-22-39-43.png)
+
 # Appendix A - Online vs Offline
 
 As stated at the start of this document, the Azure VPN Client is only available for installation via the Microsoft Store, this constraint manifests itself in the Store GUI in the following way.
@@ -101,7 +141,7 @@ Now look at the Azure VPN Client from the same view.
 
 Notice that online vs offline is a toggle that is not available.
 
-That is because the Azure VPN Client app is only an Online app, I.e. it can only be pushed from the store, and must remain insync, I.e. automatically updated.
+That is because the Azure VPN Client app is only an Online app, I.e. it can only be pushed from the store, and must remain in sync, I.e. automatically updated.
 
 You can see this reflected in your Manage Apps view in the store.
 
