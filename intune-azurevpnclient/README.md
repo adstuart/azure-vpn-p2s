@@ -23,7 +23,9 @@
 
 #  Context
 
-> Before continuing, be aware of future changes in respect to the Microsoft Store for business: https://techcommunity.microsoft.com/t5/windows-it-pro-blog/evolving-the-microsoft-store-for-business-and-education/ba-p/2569423
+> **Note**. Before continuing, be aware of future changes in respect to the Microsoft Store for business: https://techcommunity.microsoft.com/t5/windows-it-pro-blog/evolving-the-microsoft-store-for-business-and-education/ba-p/2569423
+
+> **Important!** If you are using Group Policy Objects (GPO), enabling the following setting will prevent automatic updates from the Microsoft Store for Business, and therefore prevent installation of Online-only (see Appendix A) apps such as the Azure VPN Client
 
 The Azure VPN Client is a VPN plugin for Windows 10 that provides additional features including support for the OpenVPN transport protocol, and Azure AD authentication. See here for more context https://github.com/adstuart/azure-vpn-p2s/tree/main/intune-win10-triggers#big-picture. 
 
