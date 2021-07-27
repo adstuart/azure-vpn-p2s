@@ -4,7 +4,6 @@
 
 - [Azure VPN Client deployment via Intune](#azure-vpn-client-deployment-via-intune)
 - [Context](#context)
-        - [1. <a name='pointright:Note'></a>:pointright: Note](#1-a-namepointrightnoteapointright-note)
 - [Overview](#overview)
 - [Considerations](#considerations)
 - [Guide](#guide)
