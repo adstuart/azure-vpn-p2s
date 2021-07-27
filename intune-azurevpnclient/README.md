@@ -1,4 +1,4 @@
-# Azure VPN Client installation + Intune, automated deployment
+# Azure VPN Client deployment via Intune
 
 #  Introduction
 
