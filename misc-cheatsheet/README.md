@@ -1,4 +1,4 @@
-# Misc commands and snippets of knowledge useful when working with Azure VPN P2S solutions
+# Misc commands, links and snippets of knowledge useful when working with Azure VPN P2S solutions
 
 ## How to force Intune resync from PowerShell?
 
@@ -21,3 +21,8 @@ Useful for packaging in to scripts etc. Taken from https://oofhours.com/2019/09/
 Note how this includes connected duration, external PiP and internal allocated P2S IP address
 
 - Disconnect a specified P2S user, (get the user connection ID from the previous command) `Disconnect-AzP2sVpnGatewayVpnConnection  -ResourceGroupName <rg> -VpnConnectionId "OVPN_635294B2-475F-074B-6E31-ADAB452F5247"`
+
+## Force tick the "connect automatically" tickbox in Windows 10, via PowerShell
+
+https://powers-hell.com/2020/11/28/set-your-azure-vpn-connections-to-connect-automatically-with-powershell/
+
