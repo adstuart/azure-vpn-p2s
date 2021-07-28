@@ -21,7 +21,7 @@
 
 <!-- /TOC -->
 
-#  Context
+# Context
 
 :warning: **Note.** Before continuing, be aware of future changes in respect to the Microsoft Store for business: https://techcommunity.microsoft.com/t5/windows-it-pro-blog/evolving-the-microsoft-store-for-business-and-education/ba-p/2569423
 
