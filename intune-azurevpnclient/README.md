@@ -154,7 +154,7 @@ As stated at the start of this document, the Azure VPN Client is only available 
 
 ![](images/2021-07-27-22-08-55.png)
 
-Now look at the Azure VPN Client from the same view. Notice that the online vs offline toggle is not available. That is because the Azure VPN Client app is only an Online-only app, I.e. it can **only** be pushed from the store, and must remain in sync, I.e. automatically updated.
+- Now look at the Azure VPN Client from the same view. Notice that the online vs offline toggle is not available. That is because the Azure VPN Client app is only an Online-only app, I.e. it can **only** be pushed from the store, and must remain in sync, I.e. automatically updated.
 
 ![](images/2021-07-27-22-09-48.png)
 
