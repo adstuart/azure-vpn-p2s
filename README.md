@@ -1,6 +1,4 @@
-# Azure P2S VPN 
-
-Articles and labs relating to P2S Client VPN solutions on Microsoft Azure.
+# Articles and labs relating to P2S Client VPN solutions on Microsoft Azure.
 
 [Azure VPN Client deployment via Intuneb](https://github.com/adstuart/azure-vpn-p2s/tree/main/vwan-multihub)
 
