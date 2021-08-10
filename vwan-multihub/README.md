@@ -23,6 +23,7 @@
     - [2.5. Additional Technical considerations](#25-additional-technical-considerations)
     - [2.6. Good to know](#26-good-to-know)
 - [3. Appendix](#3-appendix)
+    - [User-tunnel only](#user-tunnel-only)
 
 <!-- /TOC -->
 
@@ -318,6 +319,8 @@ Taking this design one step further, if you are utilizing a multi-region VWAN de
 
 # 3. Appendix
 
+## User-tunnel only
+
 For reference, as stated earlier:
 
 > If both your user and [device identities](https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join) are solely and 100% migrated to the Cloud, then this simplifies your requirements for an AOVPN design. The main reason for this is the lack of need for pre-login connectivity. if a user needs to login to their Windows 10 client laptop, and the machine does not have cached, they are able to attempt authentication over the public Internet, directly to Azure AD. 
@@ -328,4 +331,11 @@ For completeness, here would be the simplified design to accommodate a user-tunn
 
 ![](images/2021-08-10-14-35-50.png)
 
+<!-- -/## IKEv2 only
 
+If you do not wish to make use of AzureAD authentication for User Tunnel, and are happy using IKEv2 for both UT and DT, then a single gateway design can accommodate this requirement. 
+- UT with IKEv2, native Win10 client, radius auth 
+- DT with IkEv2, native Win10 client, cert auth 
+- [This](https://docs.microsoft.com/en-us/azure/active-directory/authentication/howto-mfaserver-dir-radius) document may help if this approach is of interest.
+
+>
