@@ -297,7 +297,7 @@ C:\Windows\system32>route print | findstr 172.16.151.130
 
 Taking this design one step further, if you are utilizing a multi-region VWAN deployment, you are able to combine the features of _Regional Multi-hub_ and _[Global P2S profiles](https://docs.microsoft.com/en-us/azure/virtual-wan/global-hub-profile)_, to provide an enhanced design which caters for failure of an entire Azure Region.
 
-![](images/2021-08-10-15-57-30.png)
+![](images/2021-08-10-15-58-34.png)
 
 ## 2.5. Additional Technical considerations
 
