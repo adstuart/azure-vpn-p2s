@@ -29,7 +29,7 @@
 
 ## Short on time?
 
-This document shows how to use multiple Azure Virtual WAN Hubs to support Always On VPN designs for hybrid domain-joined scenarios, whilst at the same -time supporting Azure Active Directory user authentication. 
+This document shows how to use multiple **Azure Virtual WAN** Hubs to support **Always On VPN** designs for **hybrid domain-joined** scenarios, whilst at the same time supporting **Azure Active Directory** user authentication.
 
 Skip the preamble and jump straight to the [technical design](#2-virtual-wan-multi-hub-design-for-aovpn).
 
