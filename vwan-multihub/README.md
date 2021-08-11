@@ -328,13 +328,14 @@ For reference, as stated earlier:
 
 > :point_right: The implication for your AOVPN design is therefore that you only need to provide a solution based on _User Tunnel_.
 
-For completeness, here would be the simplified design to accommodate a user-tunnel only requirement.
+For completeness, here is a simplified topology, still based on Azure AD authentication, to accommodate a user-tunnel only requirement.
 
 ![](images/2021-08-10-14-35-50.png)
 
 <!-- -/## IKEv2 only
 
-If you do not wish to make use of AzureAD authentication for User Tunnel, and are happy using IKEv2 for both UT and DT, then a single gateway design can accommodate this requirement. 
+If you do not wish to make use of AzureAD authentication for User Tunnel, and are happy using IKEv2 for both UT and DT, then a single gateway design can accommodate this requirement.
+
 - UT with IKEv2, native Win10 client, radius auth 
 - DT with IkEv2, native Win10 client, cert auth 
 - [This](https://docs.microsoft.com/en-us/azure/active-directory/authentication/howto-mfaserver-dir-radius) document may help if this approach is of interest.
