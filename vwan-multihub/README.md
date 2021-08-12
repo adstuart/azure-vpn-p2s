@@ -27,6 +27,7 @@
 
 <!-- /TOC -->
 
+
 ## Short on time?
 
 This document shows how to use multiple **Azure Virtual WAN** Hubs to support **Always On VPN** designs for **hybrid domain-joined** scenarios, whilst at the same time supporting **Azure Active Directory** user authentication.
