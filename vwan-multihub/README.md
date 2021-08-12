@@ -31,7 +31,7 @@
 
 This document shows how to use multiple **Azure Virtual WAN** Hubs to support **Always On VPN** designs for **hybrid domain-joined** scenarios, whilst at the same time supporting **Azure Active Directory** user authentication.
 
-Skip the preamble and jump straight to the [technical design](#2-virtual-wan-multi-hub-design-for-aovpn).
+> Skip the preamble and jump straight to the [technical design](#2-virtual-wan-multi-hub-design-for-aovpn).
 
 # 1. Introduction
 
@@ -43,7 +43,7 @@ Oftentimes an On-Premises solution is comprised of physical network hardware, or
 
 This document assumes you have done the due diligence at a higher level before deciding that a Client VPN Solution is required for your organisation. **Many companies have made the journey to modernise their access to applications in the Cloud and may no longer require traditional Client VPNs**. 
 
-One example of this approach is to publish your applications directly to the Public Internet  using an identity based security solution with Multi-factor auth and condition access - think [M365](https://www.ncsc.gov.uk/collection/saas-security/product-evaluations/office-365). Another approach would be to publish the application using [Azure AD Application Proxy](https://docs.microsoft.com/en-us/azure/active-directory/app-proxy/application-proxy). Both of these scenarios would negate the requirement for a network-based security solution using IPsec VPNs. That said, in 2021 it is still very much the case that most Enterprise organisations require a Client VPN solution for at least some part of their IT organisation.
+One example of this approach is to publish your applications directly to the Public Internet  using an identity based security solution with Multi-factor authentication and conditional access - think [M365](https://www.ncsc.gov.uk/collection/saas-security/product-evaluations/office-365). Another approach would be to publish the application using [Azure AD Application Proxy](https://docs.microsoft.com/en-us/azure/active-directory/app-proxy/application-proxy). Both of these scenarios would negate the requirement for a network-based security solution using IPsec VPNs. That said, in 2021 it is still very much the case that most Enterprise organisations require a Client VPN solution for at least some part of their IT organisation.
 
 ## 1.2. Always On VPN
 
@@ -86,21 +86,21 @@ Your current approach to [user](https://docs.microsoft.com/en-us/azure/active-di
 
 ### 1.5.1. Azure Active Directory
 
-If both your user and [device identities](https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join) are solely in. and 100% migrated to, Azure AD, then this simplifies your requirements for an AOVPN design. The main reason for this is the lack of need for pre-login connectivity. if a user needs to login to their Windows 10 client laptop, and the machine does not have cached, they are able to attempt authentication over the public Internet, directly to Azure AD. 
+If both your user and [device identities](https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join) are solely in, and 100% migrated to, Azure AD, then this simplifies your requirements for an AOVPN design. The main reason for this is the lack of need for pre-login connectivity. if a user needs to login to their Windows 10 client laptop, and the machine does not have cached, they are able to attempt authentication over the public Internet, directly to Azure AD. 
 
 :point_right: :point_right: The implication for your AOVPN design is therefore that you only need to provide a solution based on _User Tunnel_.
 
 ### 1.5.2. Hybrid domain joined
 
-If you are however, like many organisations, still on the journey to Cloud and workings towards a modern identity strategy, then you may still be leveraging traditional Active Directory for user control, policy enforcement and/or device management. The most typical scenario being some form of IaaS based domain controllers in Azure, replicating back to an On-Premises locations, with some sort of [exchange of identity data](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/identity/) between the AD domain and Azure AD. 
+If you are however, like many organisations, still on the journey to Cloud and workings towards a modern identity strategy, then you may still be leveraging traditional Active Directory for user control, policy enforcement and/or device management. The most typical scenario being some form of IaaS based domain controllers in Azure, replicating back to an On-Premises locations, with [exchange of identity data](https://docs.microsoft.com/en-us/azure/active-directory/hybrid/whatis-azure-ad-connect/) between the AD domain and Azure AD. 
 
 It is in these scenarios that the use of Device Tunnel becomes much more important. This is because pre-login tasks such as a user attempting authentication without any cached credentials **require access to a server within your corporate network**, these same servers are not reachable over the public Internet. 
 
 This is the gap that Device Tunnel fills, running before user logon, using the device computer certificate for authentication. Whilst its possible to _only_ use Device Tunnel, the recommended and secure approach is to compliment this pre-login access with User Tunnel for post login corp access. I.e.:
 
-- DT should only grant access to a subset of your infrastructure, typically only your domain controllers and/or config management servers.
+- Device Tunnel should only grant access to a subset of your infrastructure, typically only your domain controllers and/or config management servers.
 
-- UT (which can be based on a much more secure posture of user based identity) is then used post login to access the wider corporate application estate
+- User Tunnel (which can be based on a much more secure posture of user based identity) is then used post login to access the wider corporate application estate
 
 :point_right: :point_right: The implication for your AOVPN design is therefore that you only need to provide a solution that serves both _User Tunnel_ **and** _Device Tunnel_.
 
@@ -108,15 +108,15 @@ This is the gap that Device Tunnel fills, running before user logon, using the d
 
 The reason I've taken then time to explore the above in a good level of detail is to introduce the reason why an Azure Virtual WAN multi-hub design can unlock support for hybrid-domain scenarios in Azure.
 
-_Why is this?_
+**_Why is this?_**
 
 When we design for the VPN Server role in Azure, we have two options. _Azure Virtual WAN_ or _Azure VPN Gateway_. Today, both of these components are unable to support simultaneously authentication types when using multiple transport protocols.
 
-_So... ?_
+**_So... ?_**
 
-If you are designing a P2S solution for an environment that is hybrid-domain joined, you need both UT and DT. If your UT and DT use different transport protocol, as is common if wanting to leverage AAD for UT, this cannot be done using a single gateway. Therefore you need multiple Azure VPN head-ends to achieve this. However, anyone that has spent some time with Azure Networking will know that almost all of Azure Networking is centralised around hub/spoke models wherein a _single gateway is used_. 
+If you are designing a P2S solution for an environment that is hybrid-domain joined, you need both User Tunnel and Device Tunnel. If your User Tunnel and Device Tunnel use different transport protocol, as is common if wanting to leverage AAD for User Tunnel, this cannot be done using a single gateway. Therefore you need multiple Azure VPN head-ends to achieve this. However, anyone that has spent some time with Azure Networking will know that almost all of Azure Networking is centralised around hub/spoke models wherein a _single gateway is used_. 
 
-_So what?_
+**_So what?_**
 
 **Azure Virtual WAN** now allows the use of Multiple Hubs in the same Azure region. **Each hub can support its own P2S Gateway. Each P2S gateway supports a unique P2S profile. These P2S profiles can contain your require parameters for a) User tunnel and b) Device Tunnel.**
 
@@ -140,7 +140,7 @@ How things should look:
 
 | ![](images/2021-08-10-12-09-54.png) | 
 |:--:| 
-| <span style="font-size:0.8em;">Two Virtual WAN Hubs, note separate User VPN configurations</span> |
+| <span style="font-size:0.8em;">Two Virtual WAN Hubs, note separate User VPN configurations (P2S profiles)</span> |
 
 | ![](images/2021-08-10-12-16-30.png) | 
 |:--:| 
@@ -156,7 +156,7 @@ How things should look:
 A few assumptions have been made to keep this article focused on Azure Virtual WAN, as opposed to Client side instructions:
 - Your clients are all running Windows 10.
 - They are hybrid domain joined.
-- You are using _Intune_ for device management. This would also work fine with _Configuration manager_, or even pushing out parameters locally.
+- You are using Intune for device management. This would also work fine with Configuration manager, or even pushing out parameters locally.
 - You have a working [PKI infrastructure](https://docs.microsoft.com/en-us/mem/intune/protect/certificates-profile-scep) and have deployed the required certificates to your machines.
 - You have the Azure VPN Client installed on all clients at scale, this is typically pushed out [via Intune](https://github.com/adstuart/azure-vpn-p2s/tree/main/intune-azurevpnclient) app profiles. 
 
@@ -181,15 +181,18 @@ Verificaiton is also possible from the Virtual WAN headend, you can check indivi
 
 ### 2.2.1. Profile XML template for user tunnel
 
+Pay attention to the commented lines, and update as required to meet your environment variables.
+
 ```xml
  <VPNProfile>
-   <!--<EdpModeId>corp.contoso.com</EdpModeId>-->
-   <RememberCredentials>true</RememberCredentials>
+      <RememberCredentials>true</RememberCredentials>
    <AlwaysOn>true</AlwaysOn>
+    <!-- Match DNS suffice on physical/wifi interfaces in Corp location to prevent VPN running while in office -->
    <TrustedNetworkDetection>contoso.com,test.corp.contoso.com</TrustedNetworkDetection>
    <DeviceTunnel>false</DeviceTunnel>
    <RegisterDNS>false</RegisterDNS>
    <PluginProfile>
+    <!-- insert FQDN for your Virtual WAN P2S profile, found within the downloaded VPN configuration files-->
      <ServerUrlList>**Your VWAN FQDN**</ServerUrlList> 
      <CustomConfiguration>
 
@@ -198,6 +201,7 @@ Verificaiton is also possible from the Virtual WAN headend, you can check indivi
     i:nil="true" />
   <clientauth>
     <aad>
+     <!-- Auto populated after following the guides in 2.1 -->
       <audience>41b23e61-6c1e-4545-b367-xxxxxxx</audience>
       <cachesigninuser>true</cachesigninuser>
       <issuer>https://sts.windows.net/ec4c61af-6e9b-4558-86e3-xxxxxx/</issuer>
@@ -211,6 +215,7 @@ Verificaiton is also possible from the Virtual WAN headend, you can check indivi
   </clientauth>
   <clientconfig
     i:nil="true" />
+     <!-- This will appear as VPN name in Windows, and need to match your Intune configuraiton -->
   <name>Global-WAN_user-aad</name>
   <protocolconfig>
     <sslprotocolConfig>
@@ -221,15 +226,18 @@ Verificaiton is also possible from the Virtual WAN headend, you can check indivi
     <ServerEntry>
       <displayname
         i:nil="true" />
+         <!-- insert FQDN for your Virtual WAN P2S profile, found within the downloaded VPN configuration files-->
       <fqdn>**Your VWAN FQDN**</fqdn>
     </ServerEntry>
   </serverlist>
   <servervalidation>
     <cert>
+     <!-- Auto populated after following the guides in 2.1 -->
       <hash>**snip**</hash>
       <issuer
         i:nil="true" />
     </cert>
+    <!-- Auto populated after following the guides in 2.1 -->
     <serversecret>**snip**</serversecret>
     <type>cert</type>
   </servervalidation>
@@ -245,17 +253,19 @@ Verificaiton is also possible from the Virtual WAN headend, you can check indivi
 
 ### 2.2.2. Profile XML template for device tunnel
 
+Pay attention to the commented lines, and update as required to meet your environment variables.
+
 ```xml
 <VPNProfile>  
   <NativeProfile>  
+  <!-- insert FQDN for your Virtual WAN P2S profile, found within the downloaded VPN configuration files-->
 <Servers>**Your VWAN FQDN**</Servers>  
 <NativeProtocolType>IKEv2</NativeProtocolType>  
 <Authentication>  
   <MachineMethod>Certificate</MachineMethod>  
 </Authentication>  
 <RoutingPolicyType>SplitTunnel</RoutingPolicyType>  
- <!-- disable the addition of a class based route for the assigned IP address on the VPN interface -->
-<DisableClassBasedDefaultRoute>true</DisableClassBasedDefaultRoute>  
+ <DisableClassBasedDefaultRoute>true</DisableClassBasedDefaultRoute>  
   </NativeProfile> 
   <!-- IP address prefixes, typically of your domain controllers -->  
   <Route>  
@@ -266,28 +276,25 @@ Verificaiton is also possible from the Virtual WAN headend, you can check indivi
 <Address>10.3.1.5</Address>  
 <PrefixSize>32</PrefixSize>  
   </Route>  
-<!-- need to specify always on = true --> 
   <AlwaysOn>true</AlwaysOn> 
-<!-- new node to specify that this is a device tunnel -->  
  <DeviceTunnel>true</DeviceTunnel>
-<!--new node to register client IP address in DNS to enable manage out -->
 <RegisterDNS>true</RegisterDNS>
 </VPNProfile>
 ```
 
 ## 2.3. Network Security
 
-As stated earlier in this article, it is important to consider the scope of access permitted by both your device-tunnel. As this runs pre-login, you want to restrict this to the minimum level of access required, for example only your domain controllers if you are using DT for pre-login auth via Active Directory.
+As stated earlier in this article, it is important to consider the scope of access permitted by both your device-tunnel. As this runs pre-login, you want to restrict this to the minimum level of access required, for example only your domain controllers if you are using Device Tunnel for pre-login auth via Active Directory.
 
 There are multiple ways to achieve this network restriction.
-- In the above Profile XML, you will notice the `<Route></Route>` field used for definition of specific IPs. These are reflected in local O/S routes on Windows pointing traffic at the VPN tunnel. E.g. Routes plumbed for my example Device tunnel based on the above Profile XML.
+- In the above Profile XML for Device Tunnel, you will notice the `<Route></Route>` field used for definition of specific IPs. These are reflected in local O/S routes on Windows pointing traffic at the VPN tunnel. E.g. Routes plumbed for my example Device tunnel based on the above Profile XML.
 ```
 C:\Windows\system32>route print | findstr 172.16.151.130
          10.3.1.4  255.255.255.255         On-link    172.16.151.130     26
          10.3.1.5  255.255.255.255         On-link    172.16.151.130     26
    <snip>
 ```
-- Relying on routing alone is _security through obscurity_, the underlying tunnel is capable of encrypting traffic for IP prefixes outside of these static routes (_All VWAN CIDR rages are advertised as part of IkeV2 phase 2 setup and traffic selector negotiation_), if the user happens to know your corporate subnet ranges, and has the RBAC to create local static routes, they could in theory pass traffic. See [here](https://docs.microsoft.com/en-us/windows-server/remote/remote-access/vpn/vpn-device-tunnel-config#vpn-device-tunnel-configuration) how the same XML file can used to implement traffic selectors to restrict this tunnel at the O/S level. Ensure to pay attention to the caveats associated with Traffic Filters.
+- Relying on routing alone is _security through obscurity_, the underlying tunnel is capable of encrypting traffic for IP prefixes outside of these static routes (_All VWAN CIDR rages are advertised as part of IkeV2 phase 2 setup and traffic selector negotiation_), if the user happens to know your corporate subnet ranges, and has the permissions to create local static routes, they could in theory pass traffic. See [here](https://docs.microsoft.com/en-us/windows-server/remote/remote-access/vpn/vpn-device-tunnel-config#vpn-device-tunnel-configuration) how the same XML file can used to implement traffic filters to restrict this tunnel at the O/S level. Note the caveats associated with Traffic Filters.
 ```
 <TrafficFilter>
 <RemoteAddressRanges>10.3.1.4, 10.3.1.5</RemoteAddressRanges>
