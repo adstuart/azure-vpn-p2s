@@ -132,7 +132,7 @@ Use the official Azure documentation [here](https://docs.microsoft.com/en-us/azu
 This guide is not intended to be step-by-step implementation instructions, more focused on the high level architecture. You will find the follow articles useful if you are not already familiar with Azure Virtual WAN and P2S configuration in Azure.
 
 - [Configure Azure Active Directory authentication for User VPN](https://docs.microsoft.com/en-us/azure/virtual-wan/virtual-wan-point-to-site-azure-ad)
-- [Create custom Intune profiles to deploy User VPN client profiles](]https://docs.microsoft.com/en-us/azure/virtual-wan/vpn-profile-intune)
+- [Create custom Intune profiles to deploy User VPN client profiles](https://docs.microsoft.com/en-us/azure/virtual-wan/vpn-profile-intune)
 - [Configure an Always On VPN device tunnel for Virtual WAN](https://docs.microsoft.com/en-us/azure/virtual-wan/howto-always-on-device-tunnel)
 - [Always On VPN Device Tunnel Configuration using Intune](https://directaccess.richardhicks.com/2019/03/25/always-on-vpn-device-tunnel-configuration-using-intune/)
 - [Install client certificates for P2S certificate authentication connections](https://docs.microsoft.com/en-us/azure/vpn-gateway/point-to-site-how-to-vpn-client-install-azure-cert)
