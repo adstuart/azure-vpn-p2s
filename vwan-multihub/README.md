@@ -332,7 +332,7 @@ Taking this design one step further, if you are utilizing a multi-region VWAN de
 
 For reference, as stated earlier:
 
-> If both your user and [device identities](https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join) are solely and 100% migrated to the Cloud, then this simplifies your requirements for an AOVPN design. The main reason for this is the lack of need for pre-login connectivity. if a user needs to login to their Windows 10 client laptop, and the machine does not have cached, they are able to attempt authentication over the public Internet, directly to Azure AD. 
+> If both your user and [device identities](https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join) are solely and 100% migrated to the Cloud, then this simplifies your requirements for an AOVPN design. The main reason for this is the lack of need for pre-login connectivity. if a user needs to login to their Windows 10 client laptop, and the machine does not have cached credentials, they are able to attempt authentication over the public Internet, directly to Azure AD. 
 
 > :point_right: The implication for your AOVPN design is therefore that you only need to provide a solution based on _User Tunnel_.
 
