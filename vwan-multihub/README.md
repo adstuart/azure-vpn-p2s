@@ -87,7 +87,7 @@ Your current approach to [user](https://docs.microsoft.com/en-us/azure/active-di
 
 ### 1.5.1. Azure Active Directory
 
-If both your user and [device identities](https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join) are solely in, and 100% migrated to, Azure AD, then this simplifies your requirements for an AOVPN design. The main reason for this is the lack of need for pre-login connectivity. if a user needs to login to their Windows 10 client laptop, and the machine does not have cached, they are able to attempt authentication over the public Internet, directly to Azure AD. 
+If both your user and [device identities](https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join) are solely in, and 100% migrated to, Azure AD, then this simplifies your requirements for an AOVPN design. The main reason for this is the lack of need for pre-login connectivity. if a user needs to login to their Windows 10 client laptop, and the machine does not have cached credentials, they are able to attempt authentication over the public Internet, directly to Azure AD. 
 
 :point_right: :point_right: The implication for your AOVPN design is therefore that you only need to provide a solution based on _User Tunnel_.
 
