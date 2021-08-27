@@ -34,6 +34,8 @@ This document shows how to use multiple **Azure Virtual WAN** Hubs to support **
 
 > Skip the preamble and jump straight to the [technical design](#2-virtual-wan-multi-hub-design-for-aovpn).
 
+> :bulb: Looking for a design based on traditional Hub/Spoke Virtual Networks instead of Azure Virtual WAN instead? Click [here](https://github.com/adstuart/azure-vpn-p2s/tree/main/vpngateway-multivnet).
+
 # 1. Introduction
 
 As companies continue to migrate their data and applications to the Cloud, and users are increasingly working remotely, IT organisations look to provide a Client VPN solution that runs on Azure.
