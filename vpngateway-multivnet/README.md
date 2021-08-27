@@ -21,7 +21,7 @@
     - [2.3. Network Security](#23-network-security)
     - [2.5. Additional Technical considerations](#25-additional-technical-considerations)
     - [2.6. Good to know](#26-good-to-know)
-- [3. Appendix-](#3-appendix-)
+- [3. Appendix](#3-appendix)
     - [User-tunnel only](#user-tunnel-only)
 
 <!-- /TOC -->
@@ -343,7 +343,7 @@ C:\Windows\system32>route print | findstr 172.16.171.130
 
 - Although outside the scope of this Windows-focused article. If you happen to have Mac clients in your infrastructure, you are now able to leverage the [Azure VPN client for macOS](https://azure.microsoft.com/en-us/updates/general-availability-ga-of-azure-vpn-client-for-macos/), bringing Azure AD auth to VPN on OSX.
 
-# 3. Appendix-
+# 3. Appendix
 
 ## User-tunnel only
 
