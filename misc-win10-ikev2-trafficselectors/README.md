@@ -23,7 +23,7 @@
 
 # Short on time?
 
-The Windows 10 IKEv2 Traffic Selector (TS) limit was previously 25. This has now been removed in some recent builds. Click [here](#build-updates) to short cut to the technical details.
+The Windows 10 IKEv2 Traffic Selector (TS) limit was previously 25. This has now been removed in some recent builds. Click [here](#build-updates) to shortcut to the technical details.
 
 #  Introduction
 
