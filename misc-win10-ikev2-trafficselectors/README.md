@@ -63,7 +63,7 @@ Ok, you might say well "no worries, I have less than 25 VNets". Now lets conside
 
 Every prefix that comes in via ExpressRoute gets reflected as one extra traffic selector. Same for remote BGP connected S2S branches, same for remote region CIDR blocks in VWAN.
 
-**I.e. When building transit designs in Azure, you can very quickly exceed the 25 TS limit, rendering your IKEv2 client tunnel inoperable.
+**I.e. When building transit designs in Azure, you can very quickly exceed the 25 TS limit, rendering your IKEv2 client tunnel inoperable.**
 
 # What has changed?
 
