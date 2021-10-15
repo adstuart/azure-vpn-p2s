@@ -98,6 +98,7 @@ NB. If you want to do this yourself, the easiest way to add address spaces is us
 ```az network vnet update -g resourcegorup -n vnetname --address-prefixes  10.18.0.0/16 10.21.27.0/24 ... ...```
 
 ![](images/2021-10-14-22-40-31.png)
+
 ![](images/2021-10-14-22-41-54.png)
 
 
@@ -108,7 +109,9 @@ NB. If you want to do this yourself, the easiest way to add address spaces is us
 I reconnected my previously provlematic spoke, but also updated by Win10 Client (version 1909) from build 18363.1801 to build 18363.1854. Bingo!
 
 ![](images/2021-10-14-23-09-17.png)
+
 ![](images/2021-10-14-22-53-46.png)
+
 ![](images/2021-10-14-23-08-02.png)
 
 ## Azure P2S gateway debugging
@@ -154,4 +157,3 @@ Thanks to fellow Microsoft colleagues for collaborative discussions that contrib
 - Ahmad AlDeiri
 - Cristian Critelli
 - Windows Dev team
-
