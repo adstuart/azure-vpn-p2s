@@ -1,214 +1,157 @@
 
-# Windows 10 IkeV2 traffic selectors
+# Windows 10 IKEv2 traffic selectors
+
+<!-- TOC -->
+
+- [Windows 10 IKEv2 traffic selectors](#windows-10-ikev2-traffic-selectors)
+- [Short on time?](#short-on-time)
+- [Introduction](#introduction)
+    - [Context](#context)
+    - [Problem Statement](#problem-statement)
+    - [Why is the especially problematic for Azure based VPN designs?](#why-is-the-especially-problematic-for-azure-based-vpn-designs)
+- [What has changed?](#what-has-changed)
+    - [Build updates](#build-updates)
+    - [The proof is in the pudding](#the-proof-is-in-the-pudding)
+        - [Example old build](#example-old-build)
+        - [Example new build](#example-new-build)
+    - [Azure P2S gateway debugging](#azure-p2s-gateway-debugging)
+- [Protocol limits](#protocol-limits)
+- [Protocol limits](#protocol-limits)
+- [Closing](#closing)
+
+<!-- /TOC -->
+
+# Short on time?
+
+The Windows 10 IKEv2 TS limit has been raised from 25 after the [builds](#build-updates) listed below.
 
 #  Introduction
 
-## Scenario
+## Context
 
-some text here
+When building remote user / client VPN / P2S VPN solutions on Azure (or indeed using On-Premises VPN servers) a required part of the process is to select the protocol used for tunnel transport. Today this typically results in either OpenVPN or IKEv2, with the former offering many advantages. That said, IKEv2 is still used by some customers, and more importantly still required for some scenarios. One common scenario is the Device Tunnel feature in Windows 10, which must use IKEv2, more context/detail [here](https://github.com/adstuart/azure-vpn-p2s/tree/main/vwan-multihub).
 
-## Important!
-  
-This was intiially tested using Windows 10 clients hosted on Azure Virtual Machines, however app/name triggering does not seem to function in this scenario. (Always-On triggering works fine). I therefore suggest using a local Windows 10 client. One to watch out for if you are proving this out in a virtual lab before production.
+> Please build P2S solutions using OpenVPN where possible, it will make your life a lot easier.
 
-## Big Picture
+## Problem Statement
 
-Caveat empor. The solution explored in this article is narrowly focused on allowing a VPN to trigger based on specific conditions. There are other technical approaches to solving these customer scenarios, that fall outside the scope of this document. Examples include exposing the required application directly to the Internet and using a Modern Authentication method, or utilising Azure AD Application Proxy to publish the application via the Internet, thereby potentially removing the requirement for a Client VPN at all.
+Prior to September 2021 Windows 10 exhibited a behaviour with respect to [IKEv2 Phase 2 (aka quick mode) traffic selectors](https://datatracker.ietf.org/doc/html/rfc5996#page-40) that sometimes became problematic for Client VPN designs. Specifically the problem was ("is" depending on your patch level, keep reading... :) ) **if you advertise a total of more than 25 Traffic Selectors then VPN tunnel setup on the client would fail** with the following error:
 
-## Win 10 VPN 
+> Error processing ID payload. (Error 13834)
 
-A (very) quick summary of the Windows 10 VPN platform:
+![](images/2021-10-14-10-54-27.png)
 
-- Built-in VPN Client software. Pre-packaged out of the box, supports IKEv2 and SSTP protocols
-- Supports universal VPN plugins, often used to enhance the base feature set E.g. to support SSL based VPNs
-  - Azure VPN Client is just one example of a plugin, many other vendors such as Palo Alto exist in this space
-   - These plugins require installation beyond what is supplied in the base Win10 O/S
-- Configuration via the VPNv2 configuration service provider (CSP) standardised interface https://docs.microsoft.com/en-us/windows/client-management/mdm/vpnv2-csp
-  -  This CSP can be configured locally via PowerShell, or remotely via an MDM (E.g., Intune)
-  -  Support for ProfileXML files that contain a list of profile settings, in a defined structure that aligns with the parameters set out in the VPNv2 schema
+You may have seen references to this issue elsewhere on the internet:
 
-More technical detail here https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-guide
+- https://www.tsls.co.uk/index.php/2019/11/07/azure-gateway-point-site-windows-vpn-client-error-processing-id-payload/ (ignore the build info/versions here, this information is no longer accurate)
+- [feedback.azure.com](https://webcache.googleusercontent.com/search?q=cache:7Nn0BHAboDQJ:https://feedback.azure.com/forums/217313-networking/category/345028-virtual-wan%3Fcategory_id%3D77468+&cd=5&hl=en&ct=clnk&gl=uk) (no longer in use)
+- https://github.com/MicrosoftDocs/azure-docs/issues/40135
 
-Using the above structure, it is therefore possible to leverage the native VPNv2 schema for general parameter definition (E.g. When should this VPN connect? what server should I connect to? what is my P2S DNS configuration?), whilst at the same time leverage the Universal Plugin for authentication types and transport mechanisms not provided by the native O/S. Azure VPN Client is an example of this, providing supports for the OpenVPN transport protocol, and Azure AD authentication, both of which are not provided by Windows10 Client VPN capability out of the box. This article builds upon this functionality to define general trigger settings that affect the Azure VPN Client behaviour.
+In fact it is even documented on the Azure networking limits [page](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#:~:text=P2S%20route%20limit,25%20for%20Windows) 
+![](images/2021-10-14-21-51-23.png)
 
-# VPN Trigger options
 
-The popularity of the term Always-On VPN (AOVPN) can cause confusion when approaching VPN designs on Windows 10. Whilst its true the Always-On experience is the most common configuration; it is possible to configure the client to activate in several ways.
+## Why is the especially problematic for Azure based VPN designs?
 
-- Trigger option 1. **Always-O**n. To achieve this, simply add <AlwaysOn>true</AlwaysOn> to your XML file. The VPN will connect after the user logs in and remain connected.
-- Trigger option 2. **Manual**, user driven. Set <AlwaysOn>false</AlwaysOn> in your XML file. The VPN only connects when a user hits “connect”, and only disconnects when they choose “disconnect”
-- Trigger option 3. **App-based trigger**, the VPN connects after a specified application is launched and disconnects ~5 minutes after the application is closed.
-- Trigger option 4. **Name-based trigger**, the VPN connects after the O/S processes a DNS lookup for a specified domain. See section below for disconnect behaviour related to this trigger type.
+Consider the following diagram. Azure VPN Gateway will advertise a phase 2 traffic selector per address space (CIDR) block you have configured on a VNet. Therefore it only takes a hub + 25 VNets to advertise more than 25 TS to your P2S Clients. Route summarisation or IKEv2 TS consolidation is not possible using native Azure solutions, today.
 
-More detail:  https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-auto-trigger-profile
+![](images/2021-10-14-22-04-49.png)
 
-### :point_right: Note
+Ok, you might say well "no worries, I have less than 25 VNets". Now lets consider an emerging trend that is quite popular with customers. Using an _Azure Hub VNET_ (with Azure Router Server) or _Azure Virtual WAN Hub_ as a transit hub to onwards networks (ExpressRoute, S2S VPN, other regions). 
 
-> The following tick-box =/= Always-On. Instead, this effectively tells the VPN platform to connect automatically **only** if one of the above triggers = YES.
+![](images/2021-10-14-22-09-04.png)
 
-![auto_connect](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/connect_auto.png)
+Every prefix that comes in via ExpressRoute gets reflected as one extra traffic selector. Same for remote BGP connected S2S branches, same for remote region CIDR blocks in VWAN.
 
-# Lab Setup
+**I.e. When building transit designs in Azure, you can very quickly exceed the 25 TS limit, render your IKEv2 client tunnel inoperable, and there are no effective ways to prevent this happening.**
 
-### Prerequisites
+# What has changed?
 
-- Client is AAD joined, and enrolled in Intune
-- Client machine has required client certificates installed
-- Azure VPN Client is installed on Windows 10 (either manually, or via Intune)
+## Build updates
 
-See more:
+To quote the KBs:
 
-https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-profile-intune
+> Removes the limitation of 25 maximum Traffic Selectors in the Windows native Internet Key Exchange (IKE) client and server.
 
-https://docs.microsoft.com/en-us/azure/virtual-wan/vpn-profile-intune
+This has been fixed in the following Windows 10 [builds](https://docs.microsoft.com/en-us/windows/release-health/release-information):
 
-### Configuration
+| Version | OS Build | KB Link |
+| ------------- | ------------- |   ------------- |
+| 1809 aka RS5 | 17763.2210  |   [KB5005625](https://support.microsoft.com/en-us/topic/september-21-2021-kb5005625-os-build-17763-2210-preview-5ae2f63d-a9ce-49dd-a5e6-e05b90dc1cd8#:~:text=Removes%20the%20limitation%20of%2025%20maximum%20Traffic%20Selectors%20in%20the%20Windows%20native%20Internet%20Key%20Exchange%20(IKE)%20client%20and%20server)  |
+| 1909 aka 19H2 | 18363.1830  |   [KB5005624](https://support.microsoft.com/en-gb/topic/september-21-2021-kb5005624-os-build-18363-1830-preview-b2a3af81-696b-4d59-8d7b-a05389407bb8#:~:text=Removes%20the%20limitation%20of%2025%20maximum%20Traffic%20Selectors%20in%20the%20Windows%20native%20Internet%20Key%20Exchange%20(IKE)%20client%20and%20server.) |
+| 2004 aka 20H1 | 19041.1266, 19042.1266, and 19043.1266  |   [KB5005611](https://support.microsoft.com/en-us/topic/september-30-2021-kb5005611-os-builds-19041-1266-19042-1266-and-19043-1266-preview-a37f5409-f320-4175-9a66-c2682fc11c07#:~:text=Removes%20the%20limitation%20of%2025%20maximum%20Traffic%20Selectors%20in%20the%20Windows%20native%20Internet%20Key%20Exchange%20(IKE)%20client%20and%20server.%C2%A0) |
+| 20H2 | 19041.1266, 19042.1266, and 19043.1266 |   [KB5005611](https://support.microsoft.com/en-us/topic/september-30-2021-kb5005611-os-builds-19041-1266-19042-1266-and-19043-1266-preview-a37f5409-f320-4175-9a66-c2682fc11c07#:~:text=Removes%20the%20limitation%20of%2025%20maximum%20Traffic%20Selectors%20in%20the%20Windows%20native%20Internet%20Key%20Exchange%20(IKE)%20client%20and%20server.%C2%A0)|
+| 21H1 | 19041.1266, 19042.1266, and 19043.1266 |  [KB5005611](https://support.microsoft.com/en-us/topic/september-30-2021-kb5005611-os-builds-19041-1266-19042-1266-and-19043-1266-preview-a37f5409-f320-4175-9a66-c2682fc11c07#:~:text=Removes%20the%20limitation%20of%2025%20maximum%20Traffic%20Selectors%20in%20the%20Windows%20native%20Internet%20Key%20Exchange%20(IKE)%20client%20and%20server.%C2%A0) |
+| 21H2 (preview) | n/a already fixed |   |
+| Windows 11 :-)| n/a already fixed |   |
 
--	Authentication: Certificate
--	Azure head-end: Azure VWAN P2S
--	Protocol: OpenVPN
--	Client O/S: Win10 (1909)
--	Client O/S VPN: User Tunnel only
--	Client VPN software: Win10 + Azure VPN Client plugin
--	Device Management/MDF: Intune
+Thanks to Philipp Kuhn for collating the above.
 
-# App-based auto trigger 
+## The proof is in the pudding
 
-## Configuration
-Inside of your XML, specify the following configuration parameters:
-   
+### Example old build
+
+I have the following topology. Using multiple address spaces on a single spoke VNet to cause VWAN P2S gateway to advertise >25 IkeV2 TS. (Remember, each address space = new CIDR = new TS).
+
+NB. If you want to do this yourself, the easiest way to add address spaces is using the following AZ CLI command:
+
+```az network vnet update -g resourcegorup -n vnetname --address-prefixes  10.18.0.0/16 10.21.27.0/24 ... ...```
+
+![](images/2021-10-14-22-40-31.png)
+![](images/2021-10-14-22-41-54.png)
+
+
+> NB. For completeness, if I remove the spoke VNet peering from the hub (reducing the traffic selectors under 25), the VPN connects fine.
+
+### Example new build
+
+I reconnected my previously provlematic spoke, but also updated by Win10 Client (version 1909) from build 18363.1801 to build 18363.1854. Bingo!
+
+![](images/2021-10-14-23-09-17.png)
+![](images/2021-10-14-22-53-46.png)
+![](images/2021-10-14-23-08-02.png)
+
+## Azure P2S gateway debugging
+
+FYI, if you want to verify the number of traffic selectors sent from the Azure P2S gateway, you can do this by [enabling IKE logging](https://docs.microsoft.com/en-us/azure/virtual-wan/monitor-virtual-wan#diagnostic-steps) on the gateway. Sending this to a Log Analytics workspace and then querying appropriately. 
+
+Here is an example Log Analytics Kusto query to find what you are looking for quickly:
 ```
-<AppTrigger>  
-    <App>  
-      <Id>C:\windows\system32\notepad.exe</Id>  
-    </App>  
-</AppTrigger>
+AzureDiagnostics 
+| where Category == "IKEDiagnosticLog"
+| where Message contains "Number of TS"
 ```
-
-Verify App-Trigger settings have been pushed to client, by launching PowerShell and running `Get-VpnConnectionTrigger`
-
+Which gives example output:
 ```
-PS C:\Users\AdamStuart> Get-VpnConnectionTrigger
-
-cmdlet Get-VpnConnectionTrigger at command pipeline position 1
-Supply values for the following parameters:
-ConnectionName: Global-WAN
-
-ConnectionName         : Global-WAN
-ApplicationID          : { C:\windows\system32\notepad.exe }
+SESSION_ID :{8cb5875d-4c80-434b-8702-d78ac5b3d154} Remote 77.98.70.226:59780: Local 51.124.63.204:4500: [SEND] Proposed Traffic Selector payload will be (Final Negotiated) - [Tsid 0xe  ]Number of TSIs 16: StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 0.0.0.0 EndAddress 255.255.255.255 PortStart 0 PortEnd 65535 Protocol 0 Number of TSRs 16:StartAddress 10.14.0.0 EndAddress 10.14.0.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.15.0.0 EndAddress 10.15.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 192.168.128.0 EndAddress 192.168.128.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.5.250.0 EndAddress 10.5.250.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 172.20.202.0 EndAddress 172.20.202.127 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.18.0.0 EndAddress 10.18.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.31.0.0 EndAddress 10.31.0.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.3.0.0 EndAddress 10.3.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.2.0.0 EndAddress 10.2.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.6.0.0 EndAddress 10.6.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.0.0.0 EndAddress 10.0.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 10.10.0.0 EndAddress 10.10.255.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 192.168.200.0 EndAddress 192.168.200.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 192.168.129.0 EndAddress 192.168.129.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 192.168.2.0 EndAddress 192.168.2.255 PortStart 0 PortEnd 65535 Protocol 0, StartAddress 172.20.202.128 EndAddress 172.20.202.255 PortStart 0 PortEnd 65535 Protocol 0
 ```
-### :point_right: Note
+# Protocol limits
 
-> App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
+With the above we have removed the 25 TS limit in Windows, which will unblock lots of customers building Azure based P2S designs. But there is another limit to be aware of:
 
-## User Experience
+> IKEv2 as a protocol standard supports a maximum of [255](https://datatracker.ietf.org/doc/html/rfc5996#:~:text=Number%20of%20TSs%20(1%20octet)%20-%20Number%20of%20Traffic%20Selectors%20being%0A%20%20%20%20%20%20provided.) TS.
 
-VPN does not connect automatically
+If you exceed this limit (E.g. you have 1000 ExpressRoute routes being advertised via VWAN or Route Server to P2S, or, you have 255 VNets) then my testing suggests that the P2S tunnel will still establish, but traffic will be intermittent as not all remote prefixes are represented with a working traffic selector.
 
-![image](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/a.PNG)
+I.e. For scenarios requiring more tha 255 routes advertised to P2S clients, you should use a design involving either;
 
-VPN connects when application is launched
-  
-![image](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/c.PNG)
-
-VPN disconnects after ~5 minutes of closing the app
-
-# Name-based autotrigger 
-
-## Configuration
-Inside of your XML, specify the following configuration parameters:
-   
-```
-<DomainNameInformation>  
-    <DomainName>hrapp.contoso.com</DomainName>  
-    <DnsServers>8.8.8.8</DnsServers>  
-    <AutoTrigger>true</AutoTrigger>  
-</DomainNameInformation>
-```
-  
-Verify Name-Trigger settings have been pushed to client, by launching PowerShell and running `Get-VpnConnectionTrigger`
-
-```
-PS C:\Users\AdamStuart> get-vpnconnectiontrigger
-
-cmdlet Get-VpnConnectionTrigger at command pipeline position 1
-Supply values for the following parameters:
-ConnectionName: GlobalWAN
-
-ConnectionName         : GlobalWAN
-TrustedNetwork         : {corp.contoso.com}
-
-Dns Suffix                                                  Dns Servers
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _           _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-hrapp.contoso.com                                           {8.8.8.8}
-```
-  
-### :point_right: Note
-
-> App-trigger, and name-trigger do not activate if you are leveraging Trusted Network Detection and your DNS suffix on the Ethernet/Wi-Fi interface matches the variable specified in this parameter.
-  
-## User Experience
-
-VPN does not connect automatically
-  
-![image](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/a.PNG)
-
-VPN connects when DNS lookup is performed is running
-  
-![image](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/b.PNG)
-
-### :point_right: Note
-  
-> The VPN disconnect experience for name-trigger is different to that of app-trigger. This is presumably because the O/S has a clear way to acknowledge when an application is closed but applying the same approach to DNS lookups only would result in an unusable intermittent connection. Therefore, by default, with name-trigger. The VPN will trigger, and then remain connected until the user logs off.
-
-It is possible to change this behaviour of Win10 VPN, by modifying a setting called `IdleDisconnectSettings` E.g.
-
-`PS C:\Users\AdamStuart> Set-VpnConnection -Name GlobalWAN -IdleDisconnectSeconds 10 -thirdpartyvpn`
-
-This will then allow the VPN Connection to timeout if an active trigger is not detected. In my testing with name-trigger, it took between 5-15mins to disconnect, but I am unaware of the underlying variables in play. If you run `Get-VPNconnection`, you will notice that the default IdleTimeoutSeconds value = 0, I.e., Idle timeout is disabled.
-
-### :point_right: Note
-  
-> Unfortunately the VPNv2 schema does not appear to include the IdleTimeoutSeconds variable, therefore you cannot use the Profile XML definition approach. In my testing I used local PowerShell as per above, however if working at scale, you can package the script via Intune. https://docs.microsoft.com/en-us/mem/intune/apps/intune-management-extension
-
-### :point_right: Note
-  
-> The easiest way to review historical VPN connect/disconnects is via Event Viewer as per below:
-  
-![event](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/event.PNG)
-  
-# Example pricing impact
-  
-Virtual WAN pricing: https://azure.microsoft.com/en-gb/pricing/details/virtual-wan/
-  
-VPN Gateway pricing: https://azure.microsoft.com/en-gb/pricing/details/vpn-gateway/
-
-Example based on Virtual WAN, the subject of this article:
-
--	Contoso has 1000 users
--	500 require “Always-On” VPN, as they work throughout the day using systems that require  an active Private network connection to applications hosted in Azure. 
--	500 primarily work “over the Internet” using SaaS services such as M365, spending most of their working day using Office apps such as Outlook and SharePoint.
-  - These users only require the VPN connection on Friday afternoons when performing a specific task, that requires an application that users a private network connection to Azure
-
-Before tuning: Variable P2S Connection Units cost only
-  
--	1000 users * 40 hours per week * 48 working weeks per year * $0.013 per hour charge = $24960 p/a
-
-After tuning: Variable P2S Connection Units cost only
-  
--	500 users * 40 hours per week * 48 working weeks per year * $0.013 per hour charge = $12480 p/a
--	500 users  * 4 hours VPN required per week * 48 working weeks per year * $0.013 per hour charge = $1248p/a
--	Total cost $13728 p/a (=$11232 saving p/a)
-
-You achieve the above at scale by using multiple Intune Device Configuration profiles, assigned to different groups of users. For example, in the screenshot below, you can see I have three different VPN profiles that all use the same Azure VWAN service in the Cloud, however they contain different triggering options to reflect the different user requirements.
-
-![intune](https://github.com/adstuart/azure-vpn-p2s/blob/main/intune-win10-triggers/images/intune.PNG)
+- Network virtual appliance + third party TLS based VPN
+- Perform summarisation somewhere in the network, e.g. before routers are advertised to Azure via ExpresSRoute
+- Use Azure native P2S VPN Gateways in combination with OpenVPN as a protocol instead of IKEv2
 
 # Closing
 
-Thanks to my fellow Microsoft colleagues for supporting this testing.
+Thanks to fellow Microsoft colleagues for collaborative discussions that contributed to this article.
   
-- Antonio Traetto
+- Nirmal Thewarathanthri
+- Thomas Vuylsteke
 - Jack Tracey
-- Claire Brydon
-- Jason Jones 
+- Nikhil Jayakumar
+- Philipp Kuhn
+- Jason Jones
+- Daniel Mauser
+- Welly Lee
+- Ahmad AlDeiri
+- Cristian Critelli
+- Windows Dev team
+
