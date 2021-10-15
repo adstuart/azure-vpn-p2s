@@ -136,7 +136,7 @@ If you exceed this limit (E.g. you have 1000 ExpressRoute routes being advertise
 I.e. For scenarios requiring more tha 255 routes advertised to P2S clients, you should use a design involving either;
 
 - Network virtual appliance + third party TLS based VPN
-- Perform summarisation somewhere in the network, e.g. before routers are advertised to Azure via ExpresSRo-ute
+- Perform summarisation somewhere in the network, e.g. before routers are advertised to Azure via ExpressRoute
 - Use Azure native P2S VPN Gateways in combination with OpenVPN as a protocol instead of IKEv2
 
 # Closing
