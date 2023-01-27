@@ -99,5 +99,4 @@ We then use Azure Firewall as an intermediate IP Forwarding device to get traffi
 
 The result is we have a spoke Virtual Machine with reachability to two disparate networks, via two different Azure Virtual Network Gateways, something that is normally not possible with the Azure Hub/Spoke centralised model. Perhaps not something you need everyday, and not something you should run around pushing in to every design, but a good one to keep in the back pocket.
 
--
--
+
