@@ -4,6 +4,8 @@
 
 This document shows how to use either **Azure Virtual WAN** or **Azure VPN Gateway** to support **Always On VPN** designs for **hybrid domain-joined** scenarios (with a requirement for Device Tunnel), whilst at the same time supporting **Azure Active Directory** for user authentication (User Tunnel).
 
+> Skip the preamble and jump straight to the [technical design](#2-Multi-auth-design-for-AOVPN).
+
 > :bulb: This design uses the newly available (June 2023) multi-authentication feature to support simulatanouly tunnels on the same P2S Gateway, and superseeds the previous "dual hub design" [here]](https://github.com/adstuart/azure-vpn-p2s/tree/main/vpngateway-multivnet) and [here](https://github.com/adstuart/azure-vpn-p2s/tree/main/vwan-multihub).
 
 # 1. Introduction
