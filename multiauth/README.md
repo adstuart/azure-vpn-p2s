@@ -85,7 +85,9 @@ The reason I've taken then time to explore the above in a good level of detail i
 
 **_Why is this?_**
 
-When we design for the VPN Server role in Azure, we have two options. _Azure Virtual WAN_ or _Azure VPN Gateway_. Today, both of these components now able to support simultaneously authentication types when using multiple transport protocols. 
+When we design for the VPN Server role in Azure, we have two options. _Azure Virtual WAN_ or _Azure VPN Gateway_. Today, both of these components are now able to support simultaneously authentication types when using multiple transport protocols. 
+
+> Previously the use of Multi-authentication types was constrained to Gateways running a single transport protocol, often OpenVPN only
 
 | ![image.png](image.png) |
 |:--:|
