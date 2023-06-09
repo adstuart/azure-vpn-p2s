@@ -6,7 +6,7 @@ This document shows how to use either **Azure Virtual WAN** or **Azure VPN Gatew
 
 > Skip the preamble and jump straight to the [technical design](#2-Multi-auth-design-for-AOVPN).
 
-> :bulb: This design uses the newly available (June 2023) multi-authentication feature to support simulatanouly tunnels on the same P2S Gateway, and superseeds the previous "dual hub design" [here]](https://github.com/adstuart/azure-vpn-p2s/tree/main/vpngateway-multivnet) and [here](https://github.com/adstuart/azure-vpn-p2s/tree/main/vwan-multihub).
+> :bulb: This design uses the newly available (June 2023) multi-authentication feature to support simulatanouly tunnels on the same P2S Gateway, and superseeds the previous "dual hub design" [here](https://github.com/adstuart/azure-vpn-p2s/tree/main/vpngateway-multivnet) and [here](https://github.com/adstuart/azure-vpn-p2s/tree/main/vwan-multihub).
 
 # 1. Introduction
 
