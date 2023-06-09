@@ -1,4 +1,4 @@
-# Migrate from DirectAccess to Always On VPN with Azure (Using Multi-authentication with either VPN Gateway or Virtual WAN)
+# Migrate from DirectAccess to Always On VPN with Azure (Using P2S Multi-authentication and either VPN Gateway or Virtual WAN)
 
 <!-- TOC -->
 
@@ -52,7 +52,7 @@ Rather than being a single Microsoft product, just like DirectAccess, Always on 
 
 For a customer moving their data and applications to Azure, wanting a native end-to-end Microsoft Client VPN solution is desirable, and therefore **[Always On VPN](https://docs.microsoft.com/en-us/windows-server/remote/remote-access/vpn/always-on-vpn/always-on-vpn-technology-overview)** is the most natural alternative for customers looking for a DA replacement. However, as stated previously, RRAS is not supported in Azure. Therefore we need an alternative component in Azure to fulfil the role of **VPN server**, within the Always on VPN (AOVPN) framework.
 
-This document shows how you can leverage [Azure Virtual WAN](https://docs.microsoft.com/en-us/azure/virtual-wan/virtual-wan-about) to provide this **VPN Server** in the cloud,  and leverage a multi-hub architecture to cater for hybrid-domain joined scenarios. The components used within the AOVPN framework for this article are shown below.
+This document shows how you can leverage Azure Virtual WAN or Azure VPN Gateway to provide this **VPN Server** in the cloud,  and leverage the multi-authentication feature to cater for hybrid-domain joined scenarios. The components used within the AOVPN framework for this article are shown below.
 
 ![](images/2021-08-09-21-18-16.png)
 
@@ -103,25 +103,36 @@ This is the gap that Device Tunnel fills, running before user logon, using the d
 
 - User Tunnel (which can be based on a much more secure posture of user based identity) is then used post login to access the wider corporate application estate
 
-:point_right: :point_right: The implication for your AOVPN design is therefore that you only need to provide a solution that serves both _User Tunnel_ **and** _Device Tunnel_.
+:point_right: :point_right: The implication for your AOVPN design is therefore that you need to provide a solution that serves both _User Tunnel_ **and** _Device Tunnel_.
 
 ## 1.6. Bringing it all together
 
-The reason I've taken then time to explore the above in a good level of detail is to introduce the reason why an Azure Virtual WAN multi-hub design can unlock support for hybrid-domain scenarios in Azure.
+The reason I've taken then time to explore the above in a good level of detail is to introduce the reason why the new Multi-authentication feature can unlock support for hybrid-domain scenarios in Azure.
 
 **_Why is this?_**
 
-When we design for the VPN Server role in Azure, we have two options. _Azure Virtual WAN_ or _Azure VPN Gateway_. Today, both of these components are unable to support simultaneously authentication types when using multiple transport protocols.
+When we design for the VPN Server role in Azure, we have two options. _Azure Virtual WAN_ or _Azure VPN Gateway_. Today, both of these components now able to support simultaneously authentication types when using multiple transport protocols. 
+
+<figure>
+  <img src="image.png">
+  <figcaption>Multi-auth portal dialogue with VPN-Gateway showing simultaenous use of muti-auth and multi-protocol</figcaption>
+</figure>
+
+<figure>
+  <img src="image-1.png">
+  <figcaption>Reminder that OpenVPN Protocol is required for AAD auth</figcaption>
+</figure>
+
+<figure>
+  <img src="image-2.png">
+  <figcaption>Multi-auth portal dialogue with Virtual WAN showing simultaenous use of muti-auth and multi-protocol</figcaption>
+</figure>
 
 **_So... ?_**
 
-If you are designing a P2S solution for an environment that is hybrid-domain joined, you need both User Tunnel and Device Tunnel. If your User Tunnel and Device Tunnel use different transport protocol, as is common if wanting to leverage AAD for User Tunnel, this cannot be done using a single gateway. Therefore you need multiple Azure VPN head-ends to achieve this. However, anyone that has spent some time with Azure Networking will know that almost all of Azure Networking is centralised around hub/spoke models wherein a _single gateway is used_. 
+If you are designing a P2S solution for an environment that is hybrid-domain joined, you need both User Tunnel and Device Tunnel. If your User Tunnel and Device Tunnel use different transport protocol (IKEv2 for DT, OpenVPN for UT), as is common if wanting to leverage AAD for User Tunnel, this can now be done using a single gateway.  
 
-**_So what?_**
-
-**Azure Virtual WAN** now allows the use of Multiple Hubs in the same Azure region. **Each hub can support its own P2S Gateway. Each P2S gateway supports a unique P2S profile. These P2S profiles can contain your require parameters for a) User tunnel and b) Device Tunnel.**
-
-# 2. Virtual WAN Multi-hub design for AOVPN
+# 2. Multi-auth design for AOVPN
 
 ![](images/2021-08-10-12-05-10.png)
 
