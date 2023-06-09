@@ -118,15 +118,21 @@ When we design for the VPN Server role in Azure, we have two options. _Azure Vir
   <figcaption>Multi-auth portal dialogue with VPN-Gateway showing simultaenous use of muti-auth and multi-protocol</figcaption>
 </figure>
 
+<br>
+
 <figure>
   <img src="image-1.png">
   <figcaption>Reminder that OpenVPN Protocol is required for AAD auth</figcaption>
 </figure>
 
+<br>
+
 <figure>
   <img src="image-2.png">
   <figcaption>Multi-auth portal dialogue with Virtual WAN showing simultaenous use of muti-auth and multi-protocol</figcaption>
 </figure>
+
+<br>
 
 **_So... ?_**
 
