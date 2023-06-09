@@ -26,6 +26,10 @@
 
 <!-- /TOC -->
 
+## Deprecation
+
+:warning: This is an old sub-optimal design, please see the updated optimal design [here](https://github.com/adstuart/azure-vpn-p2s/tree/main/multiauth).
+
 ## Short on time?
 
 This document shows how to use multiple **Azure VPN Gateways**. in a customer-managed [traditional](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/define-an-azure-network-topology#traditional-azure-networking-topology) hub/spoke topology, to support **Always On VPN** designs for **hybrid domain-joined** scenarios, whilst at the same time supporting **Azure Active Directory** user authentication.
