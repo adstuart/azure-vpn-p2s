@@ -1,5 +1,6 @@
 # Articles and labs relating to P2S Client VPN solutions on Microsoft Azure.
 
+- [Migrate from DirectAccess to Always On VPN with Azure (2023 Multi-auth))](https://github.com/adstuart/azure-vpn-p2s/tree/main/multiauth)
 - [Migrate from DirectAccess to Always On VPN with Azure Virtual WAN](https://github.com/adstuart/azure-vpn-p2s/tree/main/vwan-multihub)
 - [Migrate from DirectAccess to Always On VPN with Azure VPN Gateway](https://github.com/adstuart/azure-vpn-p2s/tree/main/vpngateway-multivnet)
 - [Azure VPN Client deployment via Intune](https://github.com/adstuart/azure-vpn-p2s/tree/main/intune-azurevpnclient)
