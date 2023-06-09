@@ -113,26 +113,17 @@ The reason I've taken then time to explore the above in a good level of detail i
 
 When we design for the VPN Server role in Azure, we have two options. _Azure Virtual WAN_ or _Azure VPN Gateway_. Today, both of these components now able to support simultaneously authentication types when using multiple transport protocols. 
 
-<figure>
-  <img src="image.png">
-  <figcaption>Multi-auth portal dialogue with VPN-Gateway showing simultaenous use of muti-auth and multi-protocol</figcaption>
-</figure>
+| ![image.png](image.png) |
+|:--:|
+| <b>Multi-auth portal dialogue with VPN-Gateway showing simultaenous use of muti-auth and multi-protocol</b>|
 
-<br>
+| ![image-1.png](image-1.png) |
+|:--:|
+| <b>Reminder that OpenVPN Protocol is required for AAD auth</b>|
 
-<figure>
-  <img src="image-1.png">
-  <figcaption>Reminder that OpenVPN Protocol is required for AAD auth</figcaption>
-</figure>
-
-<br>
-
-<figure>
-  <img src="image-2.png">
-  <figcaption>Multi-auth portal dialogue with Virtual WAN showing simultaenous use of muti-auth and multi-protocol</figcaption>
-</figure>
-
-<br>
+| ![image-2.png](image-2.png) |
+|:--:|
+| <b>Multi-auth portal dialogue with Virtual WAN showing simultaenous use of muti-auth and multi-protocol</b>|
 
 **_So... ?_**
 
