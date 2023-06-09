@@ -27,6 +27,9 @@
 
 <!-- /TOC -->
 
+## Deprecation
+
+:warning: This is an old sub-optimal design, please see the updated optimal design [here](https://github.com/adstuart/azure-vpn-p2s/tree/main/multiauth).
 
 ## Short on time?
 
